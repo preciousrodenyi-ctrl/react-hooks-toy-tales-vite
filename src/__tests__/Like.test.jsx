@@ -22,23 +22,19 @@ describe("Liking a Toy", () => {
         global.setFetchResponse([{
             "id": 1,
             "name": "Woody",
-            "image": "woody-image.png",
+            "image": "woody.jpg",
             "likes": 5
         }])
 
         const { findByText } = render(<App />)
 
-        // Use the exact string to avoid confusion with "5 Likes" text
         const likeBtn = await findByText('Like <3')
         const pTag = likeBtn.previousSibling
 
         expect(pTag.textContent).toContain("5 Likes")
 
         global.setFetchResponse({
-            "id": 1,
-            "name": "Woody",
-            "image": "woody-image.png",
-            "likes": 6
+            "id": 1, "name": "Woody", "image": "woody.jpg", "likes": 6
         })
 
         fireEvent.click(likeBtn)

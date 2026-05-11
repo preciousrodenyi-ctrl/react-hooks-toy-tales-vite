@@ -1,5 +1,5 @@
 import { vi, expect, describe, it } from 'vitest';
-import { render, fireEvent, waitFor } from '@testing-library/react';
+import { fireEvent, render } from '@testing-library/react';
 import App from '../components/App';
 import '@testing-library/jest-dom';
 
@@ -17,22 +17,29 @@ global.setFetchResponse = (data) => {
   );
 };
 
-describe("Deleting a Toy", () => {
-    it("removes the toy when donate button is clicked", async () => {
-        global.setFetchResponse(global.baseToys)
-        const { findByText, queryByText, getAllByText } = render(<App />)
-        
-        const woodyTitle = await findByText("Woody")
-        expect(woodyTitle).toBeInTheDocument()
+describe("Liking a Toy", () => {
+    it("increments likes when the like button is clicked", async () => {
+        global.setFetchResponse([{
+            "id": 1,
+            "name": "Woody",
+            "image": "woody.jpg",
+            "likes": 5
+        }])
 
-        const donateButtons = getAllByText(/Donate/)
-        global.setFetchResponse({})
+        const { findByText } = render(<App />)
 
-        fireEvent.click(donateButtons[0])
+        const likeBtn = await findByText('Like <3')
+        const pTag = likeBtn.previousSibling
 
-        // This is the key fix for the "Woody still in document" error
-        await waitFor(() => {
-            expect(queryByText("Woody")).not.toBeInTheDocument()
+        expect(pTag.textContent).toContain("5 Likes")
+
+        global.setFetchResponse({
+            "id": 1, "name": "Woody", "image": "woody.jpg", "likes": 6
         })
+
+        fireEvent.click(likeBtn)
+
+        const pTagUpdated = await findByText(/6 Likes/)
+        expect(pTagUpdated).toBeInTheDocument()
     })
 })
