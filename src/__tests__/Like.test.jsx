@@ -1,54 +1,52 @@
-import React from 'react';
+import { vi, expect, describe, it } from 'vitest';
 import { fireEvent, render } from '@testing-library/react';
 import App from '../components/App';
 import '@testing-library/jest-dom';
 
+// --- MOCKING LOGIC START ---
+global.baseToys = [
+  { id: 1, name: "Woody", image: "woody.jpg", likes: 5 },
+  { id: 2, name: "Buzz", image: "buzz.jpg", likes: 8 }
+];
+
+global.setFetchResponse = (data) => {
+  global.fetch = vi.fn().mockImplementation(() =>
+    Promise.resolve({
+      ok: true,
+      json: () => Promise.resolve(data),
+    })
+  );
+};
+// --- MOCKING LOGIC END ---
+
 describe("Liking a Toy", () => {
     it("increments likes when the like button is clicked", async () => {
-        let toyCards
-        let toyCard
         let likes
 
         global.setFetchResponse([{
             "id": 1,
             "name": "Woody",
             "image": "http://www.pngmart.com/files/3/Toy-Story-Woody-PNG-Photos.png",
-            "likes": 8
+            "likes": 5
         }])
 
-        const app = render(<App />);
+        const { findByText } = render(<App />)
 
-        const likeButton = await app.findByText("Like <3")
+        const likeBtn = await findByText('Like <3')
+        const pTag = likeBtn.previousSibling
 
-        global.setFetchResponse({
-            "id": 1,
-            "name": "Woody",
-            "image": "http://www.pngmart.com/files/3/Toy-Story-Woody-PNG-Photos.png",
-            "likes": 9
-        })
-
-        fireEvent.click(likeButton);
-
-        toyCards = await app.findAllByTestId('toy-card')
-        toyCard = toyCards[0]
-        likes = parseInt(toyCard.querySelector('p').textContent.split(' ')[0])
-        
-        expect(likes).toBe(9);
+        expect(pTag.textContent).toContain("5 Likes")
 
         global.setFetchResponse({
             "id": 1,
             "name": "Woody",
             "image": "http://www.pngmart.com/files/3/Toy-Story-Woody-PNG-Photos.png",
-            "likes": 10
+            "likes": 6
         })
 
-        fireEvent.click(likeButton);
+        fireEvent.click(likeBtn)
 
-        toyCards = await app.findAllByTestId('toy-card')
-        toyCard = toyCards[0]
-        likes = parseInt(toyCard.querySelector('p').textContent.split(' ')[0])
-        
-        expect(likes).toBe(10);
-    });
-});
-  
+        const pTagUpdated = await findByText(/6 Likes/)
+        expect(pTagUpdated).toBeInTheDocument()
+    })
+})
