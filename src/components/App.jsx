@@ -5,14 +5,14 @@ import ToyForm from "./ToyForm";
 function App() {
   const [toys, setToys] = useState([]);
 
-  // GET request
   useEffect(() => {
     fetch("http://localhost:3001/toys")
       .then((r) => r.json())
-      .then((data) => setToys(data));
+      .then((toysArray) => {
+        setToys(toysArray);
+      });
   }, []);
 
-  // POST request
   function addToy(newToy) {
     fetch("http://localhost:3001/toys", {
       method: "POST",
@@ -30,7 +30,6 @@ function App() {
       });
   }
 
-  // DELETE request
   function deleteToy(id) {
     fetch(`http://localhost:3001/toys/${id}`, {
       method: "DELETE",
@@ -41,7 +40,6 @@ function App() {
     });
   }
 
-  // PATCH request
   function handleLike(toy) {
     fetch(`http://localhost:3001/toys/${toy.id}`, {
       method: "PATCH",
