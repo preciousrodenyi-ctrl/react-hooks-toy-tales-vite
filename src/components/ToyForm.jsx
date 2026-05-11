@@ -1,48 +1,64 @@
-// src/components/ToyForm.jsx
-import React, { useState } from "react";
+import { useState } from "react";
 
-function ToyForm({ onAddToy }) {
-  const [formData, setFormData] = useState({
-    name: "",
-    image: ""
-  });
-
-  function handleChange(e) {
-    setFormData({
-      ...formData,
-      [e.target.name]: e.target.value,
-    });
-  }
+function ToyForm({ addToy }) {
+  const [showForm, setShowForm] = useState(false);
+  const [name, setName] = useState("");
+  const [image, setImage] = useState("");
 
   function handleSubmit(e) {
     e.preventDefault();
+
     const newToy = {
-      ...formData,
-      likes: 0 // Required by lab instructions
+      name,
+      image,
     };
 
-    fetch("http://localhost:3001/toys", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(newToy),
-    })
-      .then((r) => r.json())
-      .then((savedToy) => {
-        onAddToy(savedToy);
-        setFormData({ name: "", image: "" }); 
-      });
+    addToy(newToy);
+
+    setName("");
+    setImage("");
   }
 
   return (
     <div className="container">
-      <form onSubmit={handleSubmit} className="add-toy-form">
-        <h3>Create a toy!</h3>
-        <input type="text" name="name" value={formData.name} onChange={handleChange} placeholder="Enter a toy's name..." className="input-text" />
-        <br />
-        <input type="text" name="image" value={formData.image} onChange={handleChange} placeholder="Enter a toy's image URL..." className="input-text" />
-        <br />
-        <input type="submit" name="submit" value="Create New Toy" className="submit" />
-      </form>
+      <button onClick={() => setShowForm(!showForm)}>
+        Add a Toy
+      </button>
+
+      {showForm ? (
+        <form className="add-toy-form" onSubmit={handleSubmit}>
+          <h3>Create a toy!</h3>
+
+          <input
+            type="text"
+            name="name"
+            placeholder="Enter a toy's name..."
+            className="input-text"
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+          />
+
+          <br />
+
+          <input
+            type="text"
+            name="image"
+            placeholder="Enter a toy's image URL..."
+            className="input-text"
+            value={image}
+            onChange={(e) => setImage(e.target.value)}
+          />
+
+          <br />
+
+          <input
+            type="submit"
+            name="submit"
+            className="submit"
+            value="Create New Toy"
+          />
+        </form>
+      ) : null}
     </div>
   );
 }
