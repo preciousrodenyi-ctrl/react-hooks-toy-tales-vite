@@ -3,7 +3,6 @@ import { fireEvent, render } from '@testing-library/react';
 import App from '../components/App';
 import '@testing-library/jest-dom';
 
-// --- MOCKING LOGIC START ---
 global.baseToys = [
   { id: 1, name: "Woody", image: "woody.jpg", likes: 5 },
   { id: 2, name: "Buzz", image: "buzz.jpg", likes: 8 }
@@ -17,21 +16,19 @@ global.setFetchResponse = (data) => {
     })
   );
 };
-// --- MOCKING LOGIC END ---
 
 describe("Liking a Toy", () => {
     it("increments likes when the like button is clicked", async () => {
-        let likes
-
         global.setFetchResponse([{
             "id": 1,
             "name": "Woody",
-            "image": "http://www.pngmart.com/files/3/Toy-Story-Woody-PNG-Photos.png",
+            "image": "woody-image.png",
             "likes": 5
         }])
 
         const { findByText } = render(<App />)
 
+        // Use the exact string to avoid confusion with "5 Likes" text
         const likeBtn = await findByText('Like <3')
         const pTag = likeBtn.previousSibling
 
@@ -40,7 +37,7 @@ describe("Liking a Toy", () => {
         global.setFetchResponse({
             "id": 1,
             "name": "Woody",
-            "image": "http://www.pngmart.com/files/3/Toy-Story-Woody-PNG-Photos.png",
+            "image": "woody-image.png",
             "likes": 6
         })
 

@@ -1,16 +1,11 @@
-import React from 'react';
+import { vi, expect, describe, it } from 'vitest';
 import { render } from '@testing-library/react';
 import App from '../components/App';
 import '@testing-library/jest-dom';
 
-// Define the mock data and function HERE inside the test file
 global.baseToys = [
   { id: 1, name: "Woody", image: "woody.jpg", likes: 5 },
   { id: 2, name: "Buzz", image: "buzz.jpg", likes: 8 }
-];
-
-global.alternateToys = [
-  { id: 3, name: "Jessie", image: "jessie.jpg", likes: 10 }
 ];
 
 global.setFetchResponse = (data) => {
@@ -22,14 +17,19 @@ global.setFetchResponse = (data) => {
   );
 };
 
-describe('1st Deliverable', () => {
-  test('Displays all toys on startup', async () => {
-    global.setFetchResponse(global.baseToys)
-    let { findAllByTestId } = render(<App />);
-    const toyCards = await findAllByTestId('toy-card');
-    expect(toyCards).toHaveLength(global.baseToys.length);
-    
-    // ... rest of the test code
-  });
-  // ...
-});
+describe("1st Deliverable", () => {
+    it("Displays all toys on startup", async () => {
+        global.setFetchResponse(global.baseToys)
+        const { findAllByTestId } = render(<App />)
+        const toyCards = await findAllByTestId('toy-card')
+        expect(toyCards.length).toBe(2)
+    })
+
+    it("Toys aren't hardcoded", async () => {
+        const testToys = [...global.baseToys, {id: 3, name: "Slinky Dog", image: "slinky.jpg", likes: 4}]
+        global.setFetchResponse(testToys)
+        const { findAllByTestId } = render(<App />)
+        const toyCards = await findAllByTestId('toy-card')
+        expect(toyCards.length).toBe(3)
+    })
+})

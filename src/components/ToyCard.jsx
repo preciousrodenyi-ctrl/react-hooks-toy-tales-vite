@@ -4,22 +4,16 @@ function ToyCard({ toy, onDeleteToy, onUpdateToy }) {
   const { id, name, image, likes } = toy;
 
   function handleDeleteClick() {
-    fetch(`http://localhost:3001/toys/${id}`, {
-      method: "DELETE",
-    })
+    fetch(`http://localhost:3001/toys/${id}`, { method: "DELETE" })
       .then((r) => r.json())
       .then(() => onDeleteToy(id));
   }
 
   function handleLikeClick() {
-    const updatedLikes = {
-      likes: likes + 1,
-    };
-
     fetch(`http://localhost:3001/toys/${id}`, {
       method: "PATCH",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(updatedLikes),
+      body: JSON.stringify({ likes: likes + 1 }),
     })
       .then((r) => r.json())
       .then((updatedToy) => onUpdateToy(updatedToy));
