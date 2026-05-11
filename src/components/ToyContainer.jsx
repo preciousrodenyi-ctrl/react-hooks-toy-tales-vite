@@ -1,30 +1,20 @@
-function ToyContainer({ toys = [], deleteToy, handleLike }) {
+import React from "react";
+import ToyCard from "./ToyCard";
+
+function ToyContainer({ toys, onDeleteToy, onUpdateToy }) {
+  // Map through the toys prop to create an array of ToyCard components
+  const toyCards = toys.map((toy) => (
+    <ToyCard
+      key={toy.id}
+      toy={toy}
+      onDeleteToy={onDeleteToy}
+      onUpdateToy={onUpdateToy}
+    />
+  ));
+
   return (
-    <div className="toy-container">
-      {toys.map((toy) => (
-        <div
-          key={toy.id}
-          data-testid="toy-card"
-          className="card"
-        >
-          <h2>{toy.name}</h2>
-
-          <img
-            src={toy.image}
-            alt={toy.name}
-            className="toy-avatar"
-          />
-
-          <p>{toy.likes} Likes</p>
-
-          <button onClick={() => handleLike(toy)}>
-  Like {"<3"}
-</button>
-          <button onClick={() => deleteToy(toy.id)}>
-            Donate to GoodWill
-          </button>
-        </div>
-      ))}
+    <div id="toy-collection"> {/* Use id="toy-collection" for styling/tests */}
+      {toyCards}
     </div>
   );
 }

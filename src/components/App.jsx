@@ -1,76 +1,52 @@
-import { useEffect, useState } from "react";
-import ToyContainer from "./ToyContainer";
+import React, { useEffect, useState } from "react";
+import Header from "./Header";
 import ToyForm from "./ToyForm";
+import ToyContainer from "./ToyContainer";
 
 function App() {
+  const [showForm, setShowForm] = useState(false);
   const [toys, setToys] = useState([]);
 
+  // 1. Fetch toys on startup
   useEffect(() => {
     fetch("http://localhost:3001/toys")
       .then((r) => r.json())
-      .then((toysArray) => {
-        setToys(toysArray);
-      });
+      .then((data) => setToys(data));
   }, []);
 
-  function addToy(newToy) {
-    fetch("http://localhost:3001/toys", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        ...newToy,
-        likes: 0,
-      }),
-    })
-      .then((r) => r.json())
-      .then((addedToy) => {
-        setToys([...toys, addedToy]);
-      });
+  function handleClick() {
+    setShowForm((showForm) => !showForm);
   }
 
-  function deleteToy(id) {
-    fetch(`http://localhost:3001/toys/${id}`, {
-      method: "DELETE",
-    }).then(() => {
-      setToys((currentToys) =>
-        currentToys.filter((toy) => toy.id !== id)
-      );
-    });
+  // 2. Handle adding a new toy (State Update)
+  function handleAddToy(newToy) {
+    setToys([...toys, newToy]);
   }
 
-  function handleLike(toy) {
-    fetch(`http://localhost:3001/toys/${toy.id}`, {
-      method: "PATCH",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        likes: toy.likes + 1,
-      }),
-    })
-      .then((r) => r.json())
-      .then((updatedToy) => {
-        const updatedToys = toys.map((t) =>
-          t.id === updatedToy.id ? updatedToy : t
-        );
-
-        setToys(updatedToys);
-      });
+  // 3. Handle deleting a toy (State Update)
+  function handleDeleteToy(id) {
+    const updatedToys = toys.filter((toy) => toy.id !== id);
+    setToys(updatedToys);
   }
 
-  return (
-    <div className="App">
-      <ToyForm addToy={addToy} />
-
-      <ToyContainer
-        toys={toys}
-        deleteToy={deleteToy}
-        handleLike={handleLike}
-      />
+  // 4. Handle updating likes (State Update)
+  function handleUpdateToy(updatedToy) {
+    const updatedToys = toys.map((toy) =>
+      toy.id === updatedToy.id ? updatedToy : toy
+    );
+    setToys(updatedToys);
+  }
+return (
+  <div className="App">
+    <Header />
+    {showForm ? <ToyForm onAddToy={handleAddToy} /> : null}
+    <div className="buttonContainer">
+      <button onClick={handleClick}>Add a Toy</button>
     </div>
-  );
+    <ToyContainer toys={toys} onDeleteToy={handleDeleteToy} onUpdateToy={handleUpdateToy} />
+  </div>
+);
+
 }
 
 export default App;

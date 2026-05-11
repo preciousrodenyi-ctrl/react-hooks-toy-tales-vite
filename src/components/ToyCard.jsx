@@ -19,6 +19,7 @@ function ToyCard({ toy, onDeleteToy, onUpdateToy }) {
       .then((updatedToy) => onUpdateToy(updatedToy));
   }
 
+  // YOUR RETURN MUST BE INSIDE THE ToyCard FUNCTION
   return (
     <div className="card" data-testid="toy-card">
       <h2>{name}</h2>
@@ -28,6 +29,6 @@ function ToyCard({ toy, onDeleteToy, onUpdateToy }) {
       <button className="del-btn" onClick={handleDeleteClick}>Donate to GoodWill</button>
     </div>
   );
-}
+} // <--- THIS BRACE MUST BE AT THE VERY END
 
 export default ToyCard;
