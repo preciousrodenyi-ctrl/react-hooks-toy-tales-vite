@@ -1,15 +1,9 @@
 import React from "react";
 
 function ToyCard({ toy, onDeleteToy, onUpdateToy }) {
-  return (
-    <div className="card" data-testid="toy-card"> 
-      {/* ... rest of card content ... */}
-    </div>
-  );
-}
+  const { id, name, image, likes } = toy;
 
   function handleLikeClick() {
-    // 1. Send PATCH request to update likes
     fetch(`http://localhost:3001/toys/${id}`, {
       method: "PATCH",
       headers: { "Content-Type": "application/json" },
@@ -17,16 +11,16 @@ function ToyCard({ toy, onDeleteToy, onUpdateToy }) {
     })
       .then((r) => r.json())
       .then((updatedToy) => onUpdateToy(updatedToy));
-  }
+  } // <--- Make sure this brace exists!
 
   function handleDeleteClick() {
-    // 2. Send DELETE request
     fetch(`http://localhost:3001/toys/${id}`, {
       method: "DELETE",
     })
       .then(() => onDeleteToy(id));
-  }
+  } // <--- Make sure this brace exists!
 
+  // The return MUST be inside the ToyCard function
   return (
     <div className="card" data-testid="toy-card">
       <h2>{name}</h2>
@@ -40,6 +34,6 @@ function ToyCard({ toy, onDeleteToy, onUpdateToy }) {
       </button>
     </div>
   );
-
+} // <--- This final brace closes the whole component
 
 export default ToyCard;
