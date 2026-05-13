@@ -6,34 +6,51 @@ function ToyCard({ toy, onDeleteToy, onUpdateToy }) {
   function handleLikeClick() {
     fetch(`http://localhost:3001/toys/${id}`, {
       method: "PATCH",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ likes: likes + 1 }),
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        likes: likes + 1,
+      }),
     })
       .then((r) => r.json())
       .then((updatedToy) => onUpdateToy(updatedToy));
-  } // <--- Make sure this brace exists!
+  }
 
   function handleDeleteClick() {
     fetch(`http://localhost:3001/toys/${id}`, {
       method: "DELETE",
-    })
-      .then(() => onDeleteToy(id));
-  } // <--- Make sure this brace exists!
+    }).then(() => onDeleteToy(id));
+  }
 
-  // The return MUST be inside the ToyCard function
   return (
     <div className="card" data-testid="toy-card">
       <h2>{name}</h2>
-      <img src={image} alt={name} className="toy-avatar" />
+
+      <img
+        src={image}
+        alt={name}
+        className="toy-avatar"
+      />
+
       <p>{likes} Likes</p>
-      <button className="like-btn" onClick={handleLikeClick}>
+
+      <button
+        className="like-btn"
+        onClick={handleLikeClick}
+      >
         Like {"<3"}
       </button>
-      <button className="del-btn" onClick={handleDeleteClick}>
+
+      <button
+        className="del-btn"
+        onClick={handleDeleteClick}
+      >
         Donate to Toy Story
       </button>
     </div>
   );
-} // <--- This final brace closes the whole component
+}
 
 export default ToyCard;
+

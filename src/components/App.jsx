@@ -1,10 +1,8 @@
 import React, { useEffect, useState } from "react";
-import Header from "./Header";
-import ToyForm from "./ToyForm";
 import ToyContainer from "./ToyContainer";
+import ToyForm from "./ToyForm";
 
 function App() {
-  const [showForm, setShowForm] = useState(false);
   const [toys, setToys] = useState([]);
 
   useEffect(() => {
@@ -26,22 +24,29 @@ function App() {
     const updatedToys = toys.map((toy) =>
       toy.id === updatedToy.id ? updatedToy : toy
     );
+
     setToys(updatedToys);
   }
 
   return (
     <div className="App">
-      <Header />
-      {showForm ? <ToyForm onAddToy={handleAddToy} /> : null}
-      <div className="buttonContainer">
-        <button onClick={() => setShowForm(!showForm)}>
-          {showForm ? "Hide Form" : "Add a Toy"}
-        </button>
+      <div id="toy-header">
+        <img
+          src="https://fontmeme.com/permalink/180719/67429e6afec53d21d64643101c43f029.png"
+          alt="toy header"
+        />
       </div>
-      <ToyContainer 
-        toys={toys} 
-        onDeleteToy={handleDeleteToy} 
-        onUpdateToy={handleUpdateToy} 
+
+      <div className="buttonContainer">
+        <button>Add a Toy</button>
+      </div>
+
+      <ToyForm onAddToy={handleAddToy} />
+
+      <ToyContainer
+        toys={toys}
+        onDeleteToy={handleDeleteToy}
+        onUpdateToy={handleUpdateToy}
       />
     </div>
   );
