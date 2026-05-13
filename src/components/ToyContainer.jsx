@@ -1,20 +1,17 @@
 import React from "react";
 import ToyCard from "./ToyCard";
 
-function ToyContainer({ toys, onDeleteToy, onUpdateToy }) {
-  // Map through the toys prop to create an array of ToyCard components
-  const toyCards = toys.map((toy) => (
-    <ToyCard
-      key={toy.id}
-      toy={toy}
-      onDeleteToy={onDeleteToy}
-      onUpdateToy={onUpdateToy}
-    />
-  ));
-
+function ToyContainer({ toys = [], onDeleteToy, onUpdateToy }) {
   return (
-    <div id="toy-collection"> {/* Use id="toy-collection" for styling/tests */}
-      {toyCards}
+    <div id="toy-collection">
+      {toys.map((toy) => (
+        <ToyCard 
+          key={toy.id} 
+          toy={toy} 
+          onDeleteToy={onDeleteToy} 
+          onUpdateToy={onUpdateToy} 
+        />
+      ))}
     </div>
   );
 }
