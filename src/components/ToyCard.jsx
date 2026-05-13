@@ -1,8 +1,12 @@
 import React from "react";
 
 function ToyCard({ toy, onDeleteToy, onUpdateToy }) {
-  // Destructure the toy object for easy use
-  const { id, name, image, likes } = toy;
+  return (
+    <div className="card" data-testid="toy-card"> 
+      {/* ... rest of card content ... */}
+    </div>
+  );
+}
 
   function handleLikeClick() {
     // 1. Send PATCH request to update likes
@@ -36,6 +40,6 @@ function ToyCard({ toy, onDeleteToy, onUpdateToy }) {
       </button>
     </div>
   );
-}
+
 
 export default ToyCard;
