@@ -1,29 +1,25 @@
 import React from "react";
 
 function ToyCard({ toy, onDeleteToy, onUpdateToy }) {
+  // Destructure the toy object for easy use
   const { id, name, image, likes } = toy;
 
   function handleLikeClick() {
-    const updatedLikes = {
-      likes: likes + 1,
-    };
-
+    // 1. Send PATCH request to update likes
     fetch(`http://localhost:3001/toys/${id}`, {
       method: "PATCH",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(updatedLikes),
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ likes: likes + 1 }),
     })
       .then((r) => r.json())
-      .then(onUpdateToy);
+      .then((updatedToy) => onUpdateToy(updatedToy));
   }
 
   function handleDeleteClick() {
+    // 2. Send DELETE request
     fetch(`http://localhost:3001/toys/${id}`, {
       method: "DELETE",
     })
-      .then((r) => r.json())
       .then(() => onDeleteToy(id));
   }
 
